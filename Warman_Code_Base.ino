@@ -34,7 +34,8 @@ const unsigned long period = 10000;  // This is 10 seconds in milliseconds.
 unsigned long delayedstart;
 
 #define stepsPerRevolution = 2048;
-AccelStepper stepper = AccelStepper(motorInterfaceType, stepPin, dirPin);
+AccelStepper stepper1 = AccelStepper(motorInterfaceType, stepPin_1, dirPin_1);
+AccelStepper stepper2 = AccelStepper(motorInterfaceType, stepPin_2, dirPin_2);
 
 // Define booleans
 bool button_released = true;
