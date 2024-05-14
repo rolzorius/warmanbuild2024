@@ -9,8 +9,10 @@ Servo myservo;
 #define IN1 3
 #define IN2 4
 #define ENA 9
-#define dirPin 5
-#define stepPin 6
+#define dirPin_1 5    // Direction pin STEPPER 1
+#define stepPin_1 6   // Step pin STEPPER 1
+#define dirPin_2 X    // Direction pin STEPPER 2 - need to put pin variable in
+#define stepPin_2 Y   // Step pin STEPPER 2 - need to put pin variable in
 #define motorInterfaceType 1
 
 // Global Variables
