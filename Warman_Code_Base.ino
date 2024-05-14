@@ -77,21 +77,16 @@ void breakStop() {  // Quickly stops, regardless of direction.
 void loop() {
 
   switch (task) {
-    case 1:
-      // Task 1 - 
-      Serial.print("Executing task 1.") for (int i = 0; i < cycle; i++) {
-        pos = 15;
-        myservo.write(pos);
-        delay(3500);  // is this seconds or milliseconds?
-        pos = 70;
-        myservo.write(pos);
-        delay(2000);  // is this seconds or milliseconds?
-        if (i == 4) {
-          task = 2;
-        }
-        break;
+
+    case 1:  // Task 1 - Idling, waiting for button push.
+      while (digitalRead(BUTTON) == 1){
+      Serial.print("Waiting for instructions.");
+      if (digitalRead(BUTTON) == 0) {    // if button pressed, switch to task 2. 
+        Serial.print("Switching to task 2!");
+        task = 2;
       }
-  }
+      }
+  
 
   case 2:
     // Task 2 - 
