@@ -86,8 +86,11 @@ void extend_1() {
   for (enc_1_count <= 20){
     analogWrite(XXX, 155);
   }
-  
-
+void retract_1() {  // NEED TO FIX CODE UP, NEEDS TO RETRACT ARM 
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+  for (enc_1_count <= 20){ // not sure what this is doing 
+    analogWrite(XXX, 155); // XXX?
 }
 
 void rotate_CCW() {
@@ -115,25 +118,37 @@ void loop() {
   
 
   case 2:
-    // Task 2 - Turn turret so arm is in on intercept course with first ball. Raise arm to relevant height and extend.
-    stepper1.step(100, FORWARD, SINGLE);
-    //stepper2.step(100, FORWARD, SINGLE);
-    
-    
-    
-    
+    // Task 2 - Turn turret so arm is in on intercept course with first ball. Raise arm to relevant height and extend, lever closes. 
+    //code for rotation
+    stepper1.step(100, FORWARD, SINGLE); // should we be using double for higher torque? 
+    //code for elevation 
+    //stepper2.step(100, FORWARD, SINGLE); // 100= number of steps, forward = the direction and single = the style, to find correct evelation the number of steps is what needs to be altered
+    // code to extend arm 
+    extend_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(1000); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
+    //code to close lever 
+for (int i = 0; i < 1; i++) { // not sure if a for loop is needed or if we can simply just say 'myervo.write(90);'
+        myservo.write(0);
+        delay(1000); 
+        myservo.write(90); // find correct postion of servo, TO BE ALTERED
+      } 
+  // retract arm slightly so doesnt hit ball coming in and arm can align properly 
+    retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
     
     while (digitalRead(BUTTON) == 1) {  // while button is NOT pressed,
-      Serial.print("Executing task 2.")
+      Serial.print("Executing task 2.") // shows it has moved to task 2
+      if (digitalRead(BUTTON) == 0) { // aim is when button is pressed, device will return to idle task 1 and LED will turn on to let us know
+        task = 1;
         digitalWrite(LED, HIGH);
-      delay(4000);  // is this seconds or milliseconds?
-      digitalWrite(LED, LOW);
-      delay(4000);  // is this seconds or milliseconds?
-      if (digitalRead(BUTTON) == 0) {
-        task = 3;
         Serial.print("Button pressed!");
       }
       break;
+      
     }
 
   case 3:
