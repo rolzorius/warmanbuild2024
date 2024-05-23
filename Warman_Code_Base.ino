@@ -114,20 +114,25 @@ void loop() {
         Serial.print("Switching to task 2!");
         task = 2;
       }
+        break;
       }
   
 
   case 2:
     // Task 2 - Turn turret so arm is in on intercept course with first ball. Raise arm to relevant height and extend, lever closes. 
-    //code for rotation
-    stepper1.step(100, FORWARD, SINGLE); // should we be using double for higher torque? 
-    //code for elevation 
+    
+    //code for elevation // MIGHT NEED TO CHANGE depending on what we are using to lift the arm 
     //stepper2.step(100, FORWARD, SINGLE); // 100= number of steps, forward = the direction and single = the style, to find correct evelation the number of steps is what needs to be altered
+  
+    //code for rotation 
+    stepper1.step(100, FORWARD, SINGLE); // should we be using double for higher torque? 
+   
     // code to extend arm 
     extend_1(); // defined earlier 
     analogWrite(ENA, 155);
     delay(1000); // time needed the reach needed distance, TO BE ALTERED 
     analogWrite(ENA, 0);
+  
     //code to close lever 
 for (int i = 0; i < 1; i++) { // not sure if a for loop is needed or if we can simply just say 'myervo.write(90);'
         myservo.write(0);
@@ -147,70 +152,171 @@ for (int i = 0; i < 1; i++) { // not sure if a for loop is needed or if we can s
         digitalWrite(LED, HIGH);
         Serial.print("Button pressed!");
       }
+    }
       break;
       
     }
 
   case 3:
-    // Task 3 
+    // Task 3 // lift arm to let ball roll in, rotate arm to ball 2 location, 
     while (digitalRead(BUTTON) == 1) {  // while button is NOT pressed,
       Serial.print("Executing task 3.")
-        goForwards();
-      motor_power = 128  // Motor power at 50%
-        analogWrite(ENA, motor_power);
-      startMillis = millis();
+   // elevate arm 
+      stepper2.step(100, FORWARD, SINGLE);
+
+  // open lever 
+      myservo.write(0);
+  // rotate arm 
+  stepper1.step(100, FORWARD, SINGLE);
+  // lower arm 
+stepper2.step(100, BACKWARD, SINGLE); // backward should lower the arm as forwards lifts it 
+  // extend arm 
+    extend_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(1000); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0); 
+  // close lever 
+myservo.write(90);
+  // retract slightly 
+ retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
+
+
       if (digitalRead(BUTTON) == 0 || currentMillis >= period) {  // please check this OR condition >> Time specifically
-        Serial.print("Button pressed or 10s passed!");
-        breakStop();
-        task = 4;
+        Serial.print("Button pressed!");
+        task = 1 
+          }
+task = 4; // 
       }
       break;
-    }
+  }
 
   case 4:
-  // Task 4
-    Serial.print("Waiting 2 seconds!")
-      stepper.setAcceleration(50);
-    startMillis = millis();
-    currentMillis = millis();
-    if (2000 <= currentMillis <= 8000) {
-      Serial.print("Executing task 4!")
-        goBackwards();
-      motor_power = 204  // Motor power at 80%
-        analogWrite(ENA, motor_power);
-      while (currentMillis >= 3000) {
-        for (int i = 0; i < 8 * stepsPerRevolution; i++) {
-          digitalWrite(dirPin, HIGH);
-          digitalWrite(stepPin, HIGH);
-          delayMilliseconds(2000);
-          digitalWrite(stepPin, LOW);
-          delayMilliseconds(2000);
-        }
-      }
-      if (currentMillis >= 8000) {
-        breakStop();
+  // Task 4 // lift arm to let ball roll back and move to collect ball 3
+    while (digitalRead(BUTTON) == 1) {
+       Serial.print("Executing task 3.")
+        // lift arm 
+   stepper2.step(100, FORWARD, SINGLE);
+        // rotate arm 
+stepper1.step(100, FORWARD, SINGLE);
+        //open lever 
+myservo.write(0);
+        // lower arm 
+stepper2.step(100, BACKWARD, SINGLE);
+        // extend arm 
+    extend_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(1000); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
+        //close lever 
+      myservo.write(90);
+        // retract slightly 
+       retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
         task = 5;
       }
-    }
+    
 
     break;
 
   case 5:
-    // Task 5 
-    Serial.print("Executing task 5!")
-      currentMillis = millis();
-    if (currentMillis >= 2000) {
-      Serial.print("Executing task 5!");
-      stepper.setAcceleration(3000);
-      stepper.setSpeed(200);
-      for (int i = 0; i < 6 * stepsPerRevolution; i++) {
-        digitalWrite(dirPin, LOW);
-        digitalWrite(stepPin, HIGH);
-        delayMicroseconds(2000);
-        digitalWrite(stepPin, LOW);
-        delayMicroseconds(2000);
-      }
-      digitalWrite(stepPin, LOW);
+    // Task 5 move system to drop off balls 
+    // rotate arm 
+    
+    // move system 
+
+    // retract arm 
+
+    // lower arm 
+
+    // open lever 
+    myservo.write(0);
+    
+
+      break;
+    }
+  case 6:
+    // Task 5 move system to drop off balls 
+    // rotate arm 
+    
+    // move system 
+
+    // retract arm 
+
+    // lower arm 
+
+    // open lever 
+    myservo.write(0);
+    
+
+      break;
+    }
+  case 7:
+    // Task 5 move system to drop off balls 
+    // rotate arm 
+    
+    // move system 
+
+    // retract arm 
+
+    // lower arm 
+
+    // open lever 
+    myservo.write(0);
+    
+
+      break;
+    }
+  case 8: ball 9 
+    // Task 5 move system to drop off balls 
+    // rotate arm 
+    
+    // move system 
+
+    // retract arm 
+
+    // lower arm 
+
+    // open lever 
+    myservo.write(0);
+    
+
+      break;
+    }
+  case 9:
+    // Task 9 move system to drop off balls 
+    // rotate arm 
+    
+    // move system 
+
+    // retract arm 
+
+    // lower arm 
+
+    // open lever 
+    myservo.write(0);
+    
+
+      break;
+    }
+  case 10:
+    // retrun to intial postion 
+    // rotate arm 
+    
+    // move system 
+
+    // retract arm 
+
+    // lower arm 
+
+    // open lever 
+    myservo.write(0);
+    
+
       break;
     }
 }
