@@ -122,7 +122,7 @@ void loop() {
     // Task 2 - Turn turret so arm is in on intercept course with first ball. Raise arm to relevant height and extend, lever closes. 
     
     //code for elevation // MIGHT NEED TO CHANGE depending on what we are using to lift the arm 
-    //stepper2.step(100, FORWARD, SINGLE); // 100= number of steps, forward = the direction and single = the style, to find correct evelation the number of steps is what needs to be altered
+    stepper2.step(100, FORWARD, SINGLE); // 100= number of steps, forward = the direction and single = the style, to find correct evelation the number of steps is what needs to be altered
   
     //code for rotation 
     stepper1.step(100, FORWARD, SINGLE); // should we be using double for higher torque? 
@@ -226,11 +226,17 @@ stepper2.step(100, BACKWARD, SINGLE);
   case 5:
     // Task 5 move system to drop off balls 
     // rotate arm 
-    
+    stepper1.step(100, FORWARD, SINGLE);
     // move system 
-
+goForwards();
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
     // retract arm 
-
+retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
     // lower arm 
 
     // open lever 
@@ -240,61 +246,94 @@ stepper2.step(100, BACKWARD, SINGLE);
       break;
     }
   case 6:
-    // Task 5 move system to drop off balls 
+    // Task 6 move to collect ball 4 
+    
     // rotate arm 
-    
+    stepper1.step(100, FORWARD, SINGLE);
     // move system 
-
-    // retract arm 
-
-    // lower arm 
-
-    // open lever 
-    myservo.write(0);
-    
-
+goForwards();
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
+    // lift arm 
+stepper2.step(100, FORWARD, SINGLE);
+    // extend arm 
+ extend_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(1000); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
+    // close lever 
+    myservo.write(90);
+    // retract slightly 
+retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
       break;
     }
   case 7:
-    // Task 5 move system to drop off balls 
-    // rotate arm 
-    
-    // move system 
-
-    // retract arm 
-
-    // lower arm 
-
-    // open lever 
+    // Task 7 more arm to collect ball 5
+    // lift arm to let ball roll 
+stepper2.step(100, FORWARD, SINGLE);
+    // open lever
     myservo.write(0);
-    
-
+    // rotate arm 
+    stepper1.step(100, FORWARD, SINGLE);
+    // lower arm 
+stepper2.step(100, BACKWARD, SINGLE);
+    // extend arm 
+ extend_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(1000); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
+    // close lever 
+    myservo.write(90);
+    //retract slightly
+retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
       break;
     }
-  case 8: ball 9 
-    // Task 5 move system to drop off balls 
+  case 8: ball 6 
+    // Task 8 move arm to collect ball 6
+    // lift arm to let ball roll 
+
+    // open lever
+    myservo.write(0);
     // rotate arm 
-    
-    // move system 
-
-    // retract arm 
-
+    stepper1.step(100, FORWARD, SINGLE);
     // lower arm 
 
-    // open lever 
-    myservo.write(0);
-    
+    // extend arm 
+ extend_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(1000); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
+    // close lever 
+    myservo.write(90);
+    //retract slightly
+    retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
 
       break;
     }
   case 9:
     // Task 9 move system to drop off balls 
     // rotate arm 
-    
+    stepper1.step(100, FORWARD, SINGLE); // can also be backwards if easier to work out distance 
     // move system 
-
+goBackwards();
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
     // retract arm 
-
+retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
     // lower arm 
 
     // open lever 
@@ -306,11 +345,14 @@ stepper2.step(100, BACKWARD, SINGLE);
   case 10:
     // retrun to intial postion 
     // rotate arm 
-    
-    // move system 
+    stepper1.step(100, FORWARD, SINGLE);
+    // move system ? not sure if needed
 
     // retract arm 
-
+retract_1(); // defined earlier 
+    analogWrite(ENA, 155);
+    delay(100); // time needed the reach needed distance, TO BE ALTERED 
+    analogWrite(ENA, 0);
     // lower arm 
 
     // open lever 
