@@ -3,19 +3,7 @@
 #include <AFMotor.h> // Motor
 
 // Pins
-#define SERVOPIN 10
-#define BUTTON 2
-Servo myservo;
-#define IN1 3
-#define IN2 4
-#define ENA 9
-#define dirPin_1 5    // Direction pin STEPPER 1
-#define stepPin_1 6   // Step pin STEPPER 1
-#define dirPin_2 X    // Direction pin STEPPER 2
-#define stepPin_2 Y   // Step pin STEPPER 2
-#define motorInterfaceType 1
-#define enc1 Z  // encoder for extend
-#define enc2 XZ // encoder for drive
+#define BUTTON 34
 
 // Global Variables
 int pos = 0;
@@ -23,23 +11,15 @@ int dir = 0;
 int cycle = 4;
 int task = 1;  // variable used for switch case
 
-int value = 0;
-int motor_power = 0;  // Send this to serial monitor to confirm power as expected
-int fromLow = 0;      // Lowest value seen by potentiometer.
-int fromHigh = 1023;  // Highest value seen by potentiometer.
-int toLow = 50;       // Lowest value where the motor starts to spin. May need adjusting
-int toHigh = 255;     // Highest value you can send to motor controller.
-int enc1_count = digitalRead(enc1); // Encoder1 count >>> 20 = 1 full rotation
-
 unsigned long startMillis;           //
 unsigned long currentMillis;         // Count milliseconds once a timer starts.
 const unsigned long period = 10000;  // This is 10 seconds in milliseconds.
 unsigned long delayedstart;
 
-#define stepsPerRevolution_1 = 200 // as per motor datasheet.
-#define stepsPerRevolution_2 = 200 // as per motor datasheet.
-AF_Stepper stepper1(200, 1);    // Stepper for the turret rotation. This defines stepper1(steps/rev, channel#). i.e. 200steps/rev, channel 1.
-AF_Stepper stepper2(200, 2);    // Stepper for the arm elevation.
+AF_Stepper stepper1(200, 2);    // Stepper for the turret rotation. This defines stepper1(steps/rev, channel#). i.e. 200steps/rev, channel 1.
+AF_DCMotor extender(1);
+AF_DCMotor actuator(2);
+Servo servo1;
 
 // Define booleans
 bool button_released = true;
@@ -48,53 +28,50 @@ bool button_released = true;
 // Initial setup code - RUN ONCE
 void setup() {
   Serial.begin(115200);
-  myservo.attach(SERVOPIN);
+  servo1.attach(9);
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(BUTTON, INPUT_PULLUP);
   digitalRead(BUTTON);
-  pinMode(stepPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
-  stepper1.setSpeed(20);  // Use this to change stepper1 speed.
-  stepper2.setSpeed(20);  // Use this to change stepp2 speed. REMEMBER; THE HIGHER THE SPEED THE LOWER THE TORQUE!
-  pinMode(enc1, INPUT);
+  actuator.setSpeed(255);
+  actuator.run(RELEASE);
+
 }
 
 // Movement functions
-void goForwards() {
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
+void elevateS2H() {
+  actuator.run(FORWARD);
+  actuator.setSpeed(255);
+  delay(13200);
+  actuator.setspeed(0);
 }
 
-void goBackwards() {
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, HIGH);
+void lower_ball1() {            // Lower arm for ball 1. 
+  actuator.run(BACKWARD);
+  actuator.setSpeed(255);
+  delay(7000);                // THIS NEEDS TESTING! ---------------------------- TEST ME ----------------------------
 }
 
-void coastStop() {  // Slowly decreases speed in whatever direction it's currently going.
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, HIGH);
-}
-
-void breakStop() {  // Quickly stops, regardless of direction.
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, LOW);
-}
-
-void extend_1() {
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
-  for (enc_1_count <= 20){
-    analogWrite(XXX, 155);
+void extend_full() {          // Full extend on arm.
+  extender.run(FORWARD);
+  extender.setSpeed(200);
+  delay(750);
+  extender.setSpeed(0);
   }
+
+void retract_full() {         // Full retract on arm.
+  extender.run(BACKWARD);
+  extender.setSpeed(175);
+  delay(750);
+  extender.setSpeed(0);
+}
   
 
+void rotate_ball1() {           // Rotate turret Counter-clockwise
+  stepper1.step(300, FORWARD, INTERLEAVE);    // Change (this, FORWARD, INTERLEAVE) if you want to use this movement function for a specific task.
 }
 
-void rotate_CCW() {
-  s
-  digitalWrite(dirPin_1, LOW); // set direction CCW
-  digitalWrite(stepPin_1, HIGH); // Step pin to high, causes rotation
-
+void rotate_ball2(){
+  stepper1.step(300, BACKWARD, INTERLEAVE);   // Change (this, BACKWARD, INTERLEAVE) if you want to use this function for a specific purpose. 
 }
 
 
@@ -116,7 +93,8 @@ void loop() {
 
   case 2:
     // Task 2 - Turn turret so arm is in on intercept course with first ball. Raise arm to relevant height and extend.
-    stepper1.step(100, FORWARD, SINGLE);
+    
+    rotate_ball1();
     //stepper2.step(100, FORWARD, SINGLE);
     
     
